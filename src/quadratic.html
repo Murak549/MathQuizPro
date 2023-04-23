@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>수학 문제 출제 웹사이트</title>
+    <link rel="stylesheet" type="text/css" href="navigation.css">
+  </head>
+  <body>
+    <nav>
+      <a href="../index.html">홈</a>
+      <a href="src/quadratic.html">이차식</a>
+      <a href="#">항등식</a>
+      <a href="#">1차 방정식</a>
+      <a href="#">2차 방정식</a>
+      <a href="#">3차 방정식</a>
+    </nav>
+    <!-- 문제 출제 영역 -->
+    <div id="problem-area">
+      <p id="problem-text">문제가 여기에 출제됩니다.</p>
+      <input type="text" id="answer-input" placeholder="정답을 입력하세요">
+      <button id="submit-answer">제출</button>
+    </div>
+    <!-- 버튼 영역 -->
+    <div id="button-area">
+        <button id="generate-problem-btn">문제 출제하기</button>
+        <script>
+            const generateProblemBtn = document.querySelector("#generate-problem-btn");
+            generateProblemBtn.addEventListener("click", () => {
+                // 1 또는 2 중 랜덤하게 유형 선택
+                const problemType = Math.floor(Math.random() * 2) + 1;
+    
+                if (problemType === 1) {
+                    generateProblemType1();
+                } else if (problemType === 2) {
+                    generateProblemType2();
+                }
+            });
+        </script>
+    </div>
+    <script>
+        function generateProblemType1() {
+            const q = getRandomInt(10, 99);
+            const r = getRandomInt(10, 99);
+            const s = getRandomInt(10, 99);
+            
+            const delta = Math.pow(q, 2) - 4 * r;
+            const alphaReal = (-q + Math.sqrt(delta)) / 2;
+            const alphaImag = (-q - Math.sqrt(delta)) / 2;
+            
+            // alpha와 beta가 모두 3자리수 이하의 정수나 허수가 되도록 값을 조정
+            let alpha;
+            let beta;
+            if (Number.isInteger(alphaReal) && alphaReal.toString().length <= 3) {
+                alpha = alphaReal;
+                beta = s - alphaReal - alphaImag;
+            } else {
+                alpha = alphaImag;
+                beta = s - alphaImag - alphaReal;
+            }
+            const problem = `x^2 - ${q}x + ${r} = 0 의 두근을 α, β라 할 때,  α^2 - ${s}αβ + 4 의 값은?`;
+            const answer = Math.pow(alpha, 2) - s * alpha * beta + 4;
+            return { problem, answer };
+        }
+        function generateProblemType2() {
+            // a, b, k 값 랜덤 생성
+            let a = getRandomInt(10) + 1;
+            let b = getRandomInt(10) + 1;
+            let k = generateFraction(20, 1);
+            // 근의 공식 이용하여 alpha, beta 구하기
+            let alpha = (a * k + Math.sqrt(a * a * k * k - 4 * (b * k * k + 4))) / 2;
+            let beta = (a * k - Math.sqrt(a * a * k * k - 4 * (b * k * k + 4))) / 2;
+            // 정답 생성
+            let correctAnswer = k;
+            // 오답 생성
+            let fakeAnswers = generateFakeAnswers(correctAnswer);
+            // 문제 생성
+            let problem = `x에 대한 이차방정식 x^2-${a}kx+${b}k^2+4=0의 한 근이 다른 한 근의 3배일 때, 양수 k의 값은?<br>`;
+            problem += `1. ${generateFraction(k, 2)}<br>`;
+            problem += `2. ${generateFraction(k, 1)}<br>`;
+            problem += `3. ${generateFraction(k, 3)}<br>`;
+            problem += `4. ${generateFraction(k, 4)}<br>`;
+            problem += `5. ${generateFraction(k, 5)}<br>`;
+            // 문제 출력
+            document.getElementById("problem-area").innerHTML = problem;    
+            // 정답과 오답 출력
+            printAnswers(correctAnswer, fakeAnswers);
+        }
+        document.getElementById("generate-type-1").addEventListener("click", generateProblemType1);
+        document.getElementById("generate-type-2").addEventListener("click", generateProblemType2);
+    <scirpt/>
